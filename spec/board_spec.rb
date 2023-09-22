@@ -34,4 +34,32 @@ describe Board do
       end
     end
   end
+
+  describe '#column_full?' do
+    context 'when there are no spaces available within a column' do
+      subject(:board_full_column) { described_class.new }
+      let(:columns) { board_full_column.instance_variable_get(:@columns) }
+      let(:full_column) { ['X', 'X', 'X', 'X', 'X', 'X'] }
+  
+      it 'returns true' do
+        column = 4
+        columns[4] = full_column
+        result = board_full_column.column_full?(column)
+        expect(result).to eq(true)
+      end
+    end
+    
+    context 'when there is at least one empty space within a column' do
+      subject(:board_non_full_column) { described_class.new }
+      let(:columns) { board_non_full_column.instance_variable_get(:@columns) }
+      let(:non_full_column) { ['X', 'X', 'X', 'X', 'X', ' '] }
+  
+      it 'returns false' do
+        column = 5
+        columns[5] = non_full_column
+        result = board_non_full_column.column_full?(column)
+        expect(result).to eq(false)
+      end
+    end
+  end
 end

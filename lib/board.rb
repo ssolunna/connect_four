@@ -12,7 +12,7 @@ class Board
       4 => Array.new(6, @@empty_space),
       5 => Array.new(6, @@empty_space),
       6 => Array.new(6, @@empty_space),
-      7 => Array.new(6, @@empty_space) 
+      7 => Array.new(6, @@empty_space)
     }
   end
 
@@ -40,15 +40,19 @@ class Board
   end
 
   # Updates the lowest available space within a column with the player's token
-  def update_column(column, player_token)
-    row = lowest_available_space(column)
-    @columns[column][row] = player_token
+  def update_column(column_number, player_token)
+    row = lowest_available_space(column_number)
+    @columns[column_number][row] = player_token
+  end
+
+  def column_full?(column_number)
+    lowest_available_space(column_number) ? false : true
   end
 
   private
 
   # Finds the column's row with the lowest available space
-  def lowest_available_space(column)
-    @columns[column].index(@@empty_space)
+  def lowest_available_space(column_number)
+    @columns[column_number].index(@@empty_space)
   end
 end
