@@ -4,16 +4,31 @@ require_relative '../lib/board'
 
 # Connect Four Board
 describe Board do
+  describe '#create_board' do
+    subject(:initial_board) { described_class.new }
+    let(:columns) { initial_board.instance_variable_get(:@columns) }
+
+    it 'is a hash of 7 columns each with an array of 6 empty rows' do
+      column = 1
+      row = 0
+      expect(columns).to be_instance_of(Hash)
+      expect(columns.size).to eq(7)
+      expect(columns[column]).to be_instance_of(Array)
+      expect(columns[column].size).to eq(6)
+      expect(columns[column][row]).to eq(' ')
+    end
+  end
+
   describe '#update_column' do
-    subject(:board) { described_class.new }
-    let(:columns) { board.instance_variable_get(:@columns) }
+    subject(:board_update) { described_class.new }
+    let(:columns) { board_update.instance_variable_get(:@columns) }
     let(:player) { double('Player', token: '') }
 
     it 'piles the most recent token on top of the oldest one' do
       allow(player).to receive(:token).and_return('X', 'Y', 'Z')
       column = 3
       column_order = ['X', 'Y', 'Z', ' ', ' ', ' ']
-      expect { 3.times { board.update_column(column, player.token) } }.to change{ columns[column] }.to eq(column_order)
+      expect { 3.times { board_update.update_column(column, player.token) } }.to change{ columns[column] }.to eq(column_order)
     end
 
     context 'when all spaces within a column are available' do
@@ -21,7 +36,7 @@ describe Board do
         allow(player).to receive(:token).and_return('X')
         column = 1 
         row = 0 # bottom / first row
-        expect { board.update_column(column, player.token) }.to change { columns[column][row] }.to eq('X')
+        expect { board_update.update_column(column, player.token) }.to change { columns[column][row] }.to eq('X')
       end
     end
 
@@ -30,7 +45,7 @@ describe Board do
         allow(player).to receive(:token).and_return('X', 'Y')
         column = 2 
         row = 1 # second row
-        expect { 2.times { board.update_column(column, player.token) } }.to change{ columns[column][row] }.to eq('Y')
+        expect { 2.times { board_update.update_column(column, player.token) } }.to change{ columns[column][row] }.to eq('Y')
       end
     end
   end

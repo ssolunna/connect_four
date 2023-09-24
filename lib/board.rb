@@ -5,7 +5,11 @@ class Board
   @@empty_space = ' '
 
   def initialize
-    @columns = {
+    @columns = create_board 
+  end
+
+  def create_board
+    {
       1 => Array.new(6, @@empty_space),
       2 => Array.new(6, @@empty_space),
       3 => Array.new(6, @@empty_space),
