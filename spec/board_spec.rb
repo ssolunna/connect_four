@@ -34,7 +34,7 @@ describe Board do
     context 'when all spaces within a column are available' do
       it 'adds the player token to the bottom row' do
         allow(player).to receive(:token).and_return('X')
-        column = 1 
+        column = 1
         row = 0 # bottom / first row
         expect { board_update.update_column(column, player.token) }.to change { columns[column][row] }.to eq('X')
       end
@@ -43,7 +43,7 @@ describe Board do
     context 'when the lowest available space within column 2 is in row 1' do
       it 'adds the player token to column 2, row 1' do
         allow(player).to receive(:token).and_return('X', 'Y')
-        column = 2 
+        column = 2
         row = 1 # second row
         expect { 2.times { board_update.update_column(column, player.token) } }.to change{ columns[column][row] }.to eq('Y')
       end
@@ -55,24 +55,86 @@ describe Board do
       subject(:board_full_column) { described_class.new }
       let(:columns) { board_full_column.instance_variable_get(:@columns) }
       let(:full_column) { ['X', 'X', 'X', 'X', 'X', 'X'] }
-  
+
       it 'returns true' do
         column = 4
-        columns[4] = full_column
+        columns[column] = full_column
         result = board_full_column.column_full?(column)
         expect(result).to eq(true)
       end
     end
-    
+
     context 'when there is at least one empty space within a column' do
       subject(:board_non_full_column) { described_class.new }
       let(:columns) { board_non_full_column.instance_variable_get(:@columns) }
       let(:non_full_column) { ['X', 'X', 'X', 'X', 'X', ' '] }
-  
+
       it 'returns false' do
         column = 5
-        columns[5] = non_full_column
+        columns[column] = non_full_column
         result = board_non_full_column.column_full?(column)
+        expect(result).to eq(false)
+      end
+    end
+  end
+
+  describe '#vertical_line?' do
+    subject(:board_vertical) { described_class.new }
+    let(:columns) { board_vertical.instance_variable_get(:@columns) }
+
+    context 'when a player forms a vertical line of 4 of their own token' do
+      context 'when the vertical line is at the bottom of the column' do
+        let(:line_bottom) { ['X', 'X', 'X', 'X', ' ', ' '] }
+
+        it 'returns true' do
+          column = 1
+          columns[column] = line_bottom
+          result = board_vertical.vertical_line?
+          expect(result).to eq(true)
+        end
+      end
+
+      context 'when the vertical line is at the middle of the column' do
+        let(:line_middle) { [' ', 'X', 'X', 'X', 'X', ' '] }
+
+        it 'returns true' do
+          column = 1
+          columns[column] = line_middle
+          result = board_vertical.vertical_line?
+          expect(result).to eq(true)
+        end
+      end
+
+      context 'when the vertical line is at the top of the column' do
+        let(:line_top) { [' ', ' ', 'X', 'X', 'X', 'X'] }
+
+        it 'returns true' do
+          column = 1
+          columns[column] = line_top
+          result = board_vertical.vertical_line?
+          expect(result).to eq(true)
+        end
+      end
+    end
+
+    context "when the 4 tokens don't form an vertical line" do
+      let(:no_vertical_line) { ['X', ' ', ' ', 'X', 'X', 'X'] }
+
+      it 'returns false' do
+        column = 1
+        columns[column] = no_vertical_line
+        result = board_vertical.vertical_line?
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'if the column has less than 4 tokens' do
+      let(:less_tokens) { ['X', ' ', 'X', ' ', ' ', 'X'] }
+
+      it 'returns false' do
+        column = 1
+        columns[column] = less_tokens
+        result = board_vertical.vertical_line?
         expect(result).to eq(false)
       end
     end

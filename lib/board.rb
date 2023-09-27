@@ -20,8 +20,8 @@ class Board
     }
   end
 
-  def display 
-   puts <<-HEREDOC
+  def display
+    puts <<-HEREDOC
 
                 \e[4;1mCOLUMNS\e[0m
        1   2   3   4   5   6   7
@@ -40,7 +40,7 @@ class Board
        #{@columns[1][0]} | #{@columns[2][0]} | #{@columns[3][0]} | #{@columns[4][0]} | #{@columns[5][0]} | #{@columns[6][0]} | #{@columns[7][0]}
       ---+---+---+---+---+---+---
 
-   HEREDOC
+    HEREDOC
   end
 
   # Updates the lowest available space within a column with the player's token
@@ -53,10 +53,31 @@ class Board
     lowest_available_space(column_number) ? false : true
   end
 
+  # Checks if a player forms a vertical line of 4 of their own token
+  def vertical_line?
+    @columns.each_value do |column_rows|
+      break if less_than_four_tokens?(column_rows)
+
+      if column_rows[0..3].uniq.length == 1 # at the bottom 
+        return true
+      elsif column_rows[1..4].uniq.length == 1 # at the middle
+        return true
+      elsif column_rows[2..5].uniq.length == 1 # at the top
+        return true
+      end
+    end
+
+    false
+  end
+
   private
 
   # Finds the column's row with the lowest available space
   def lowest_available_space(column_number)
     @columns[column_number].index(@@empty_space)
+  end
+
+  def less_than_four_tokens?(column_rows)
+    column_rows.filter { |space| space != @@empty_space }.length <= 3
   end
 end
