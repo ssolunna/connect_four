@@ -55,14 +55,37 @@ class Board
 
   # Checks if a player forms a vertical line of 4 of their own token
   def vertical_line?
-    @columns.each_value do |column_rows|
-      break if less_than_four_tokens?(column_rows)
+    @columns.each_value do |column|
+      break if less_than_four_tokens?(column)
 
-      if column_rows[0..3].uniq.length == 1 # at the bottom 
+      if column[0..3].uniq.length == 1 # at the bottom
         return true
-      elsif column_rows[1..4].uniq.length == 1 # at the middle
+      elsif column[1..4].uniq.length == 1 # at the middle
         return true
-      elsif column_rows[2..5].uniq.length == 1 # at the top
+      elsif column[2..5].uniq.length == 1 # at the top
+        return true
+      end
+    end
+
+    false
+  end
+
+  # Checks if a player forms a horizontal line of 4 of their own token
+  def horizontal_line?
+    0.upto(5) do |row_number|
+      row = Array.new
+
+      1.upto(7) { |column| row << @columns[column][row_number] }
+
+      break if less_than_four_tokens?(row)
+
+      if row[0..3].uniq.length == 1 # at the beginning
+        return true
+      elsif row[1..4].uniq.length == 1 # in the middle
+        return true
+      elsif row[2..5].uniq.length == 1 # in the other middle
+        return true
+      elsif row[3..6].uniq.length == 1 # at the end
         return true
       end
     end
@@ -77,7 +100,7 @@ class Board
     @columns[column_number].index(@@empty_space)
   end
 
-  def less_than_four_tokens?(column_rows)
-    column_rows.filter { |space| space != @@empty_space }.length <= 3
+  def less_than_four_tokens?(column_or_row)
+    column_or_row.filter { |space| space != @@empty_space }.length <= 3
   end
 end

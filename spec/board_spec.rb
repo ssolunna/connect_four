@@ -117,7 +117,7 @@ describe Board do
       end
     end
 
-    context "when the 4 tokens don't form an vertical line" do
+    context "when the 4 tokens don't form a vertical line" do
       let(:no_vertical_line) { ['X', ' ', ' ', 'X', 'X', 'X'] }
 
       it 'returns false' do
@@ -135,6 +135,120 @@ describe Board do
         column = 1
         columns[column] = less_tokens
         result = board_vertical.vertical_line?
+        expect(result).to eq(false)
+      end
+    end
+  end
+
+  describe '#horizontal_line?' do
+    subject(:board_horizontal) { described_class.new }
+
+    context 'when a player forms an horizontal line of 4 of their own token' do 
+      context 'when the horizontal line is at the beginning of the row' do
+        let(:line_begin) { Hash[ 
+          1 => ['X', ' ', ' ', ' ', ' ', ' '],
+          2 => ['X', ' ', ' ', ' ', ' ', ' '],
+          3 => ['X', ' ', ' ', ' ', ' ', ' '],
+          4 => ['X', ' ', ' ', ' ', ' ', ' '],
+          5 => [' ', ' ', ' ', ' ', ' ', ' '],
+          6 => [' ', ' ', ' ', ' ', ' ', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']
+        ]}
+
+        it 'returns true' do
+          board_horizontal.instance_variable_set(:@columns, line_begin)
+          result = board_horizontal.horizontal_line?
+          expect(result).to eq(true)
+        end
+      end
+
+      context 'when the horizontal line is in the middle of the row' do
+        let(:line_middle_one) { Hash[
+          1 => [' ', ' ', ' ', ' ', ' ', ' '],
+          2 => ['X', ' ', ' ', ' ', ' ', ' '],
+          3 => ['X', ' ', ' ', ' ', ' ', ' '],
+          4 => ['X', ' ', ' ', ' ', ' ', ' '],
+          5 => ['X', ' ', ' ', ' ', ' ', ' '],
+          6 => [' ', ' ', ' ', ' ', ' ', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']
+        ]}
+
+        it 'returns true' do
+          board_horizontal.instance_variable_set(:@columns, line_middle_one)
+          result = board_horizontal.horizontal_line?
+          expect(result).to eq(true)
+        end
+      end
+      
+      context 'when the horizontal line is in the other middle of the row' do
+        let(:line_middle_two) { Hash[
+          1 => [' ', ' ', ' ', ' ', ' ', ' '],
+          2 => [' ', ' ', ' ', ' ', ' ', ' '],
+          3 => ['X', ' ', ' ', ' ', ' ', ' '],
+          4 => ['X', ' ', ' ', ' ', ' ', ' '],
+          5 => ['X', ' ', ' ', ' ', ' ', ' '],
+          6 => ['X', ' ', ' ', ' ', ' ', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']
+        ]}
+
+        it 'returns true' do
+          board_horizontal.instance_variable_set(:@columns, line_middle_two)
+          result = board_horizontal.horizontal_line?
+          expect(result).to eq(true)
+        end
+      end
+
+      context 'when the horizontal line is at the end of the row' do
+        let(:line_end) { Hash[
+          1 => [' ', ' ', ' ', ' ', ' ', ' '],
+          2 => [' ', ' ', ' ', ' ', ' ', ' '],
+          3 => [' ', ' ', ' ', ' ', ' ', ' '],
+          4 => ['X', ' ', ' ', ' ', ' ', ' '],
+          5 => ['X', ' ', ' ', ' ', ' ', ' '],
+          6 => ['X', ' ', ' ', ' ', ' ', ' '],
+          7 => ['X', ' ', ' ', ' ', ' ', ' ']
+        ]}
+
+        it 'returns true' do
+          board_horizontal.instance_variable_set(:@columns, line_end)
+          result = board_horizontal.horizontal_line?
+          expect(result).to eq(true)
+        end
+      end
+    end
+    
+    context "when the 4 tokens don't form a horizontal line" do
+      let(:no_horizontal_line) { Hash[
+        1 => [' ', ' ', ' ', ' ', ' ', ' '],
+        2 => [' ', ' ', ' ', ' ', ' ', ' '],
+        3 => ['X', ' ', ' ', ' ', ' ', ' '],
+        4 => [' ', ' ', ' ', ' ', ' ', ' '],
+        5 => ['X', ' ', ' ', ' ', ' ', ' '],
+        6 => ['X', ' ', ' ', ' ', ' ', ' '],
+        7 => ['X', ' ', ' ', ' ', ' ', ' ']
+      ]}
+
+      it 'returns false' do
+        board_horizontal.instance_variable_set(:@columns, no_horizontal_line)
+        result = board_horizontal.horizontal_line?
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'if a row has less than 4 tokens' do
+      let(:less_than_four_tokens) { Hash[
+        1 => [' ', ' ', ' ', ' ', ' ', ' '],
+        2 => ['X', ' ', ' ', ' ', ' ', ' '],
+        3 => [' ', ' ', ' ', ' ', ' ', ' '],
+        4 => [' ', ' ', ' ', ' ', ' ', ' '],
+        5 => ['X', ' ', ' ', ' ', ' ', ' '],
+        6 => ['X', ' ', ' ', ' ', ' ', ' '],
+        7 => [' ', ' ', ' ', ' ', ' ', ' ']
+      ]}
+
+      it 'returns false' do
+        board_horizontal.instance_variable_set(:@columns, less_than_four_tokens)
+        result = board_horizontal.horizontal_line?
         expect(result).to eq(false)
       end
     end
