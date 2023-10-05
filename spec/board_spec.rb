@@ -143,7 +143,7 @@ describe Board do
   describe '#horizontal_line?' do
     subject(:board_horizontal) { described_class.new }
 
-    context 'when a player forms an horizontal line of 4 of their own token' do 
+    context 'when a player forms a horizontal line of 4 of their own token' do 
       context 'when the horizontal line is at the beginning of the row' do
         let(:line_begin) { Hash[ 
           1 => ['X', ' ', ' ', ' ', ' ', ' '],
@@ -250,6 +250,30 @@ describe Board do
         board_horizontal.instance_variable_set(:@columns, less_than_four_tokens)
         result = board_horizontal.horizontal_line?
         expect(result).to eq(false)
+      end
+    end
+  end
+
+  describe '#diagonal_line?' do
+    subject(:board_diagonal) { described_class.new }
+    
+    context 'when a player forms a diagonal line of 4 of their own token' do 
+      context 'case 1: diagonal line from the bottom row' do
+        let(:diagonal_one) { Hash[ 
+          1 => ['X', ' ', ' ', ' ', ' ', ' '],
+          2 => [' ', 'X', ' ', ' ', ' ', ' '],
+          3 => [' ', ' ', 'X', ' ', ' ', ' '],
+          4 => [' ', ' ', ' ', 'X', ' ', ' '],
+          5 => [' ', ' ', ' ', ' ', ' ', ' '],
+          6 => [' ', ' ', ' ', ' ', ' ', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+        }
+
+        it 'returns true' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_one)
+          result = board_diagonal.diagonal_line?
+          expect(result).to eq(true)
+        end
       end
     end
   end

@@ -93,6 +93,20 @@ class Board
     false
   end
 
+  def diagonal_line?
+    diagonal_line = []
+    column = 1
+    row = 0
+
+    4.times do
+      diagonal_line << @columns[column][row]
+      column += 1
+      row += 1
+    end
+
+    diagonal_line.uniq.length == 1 ? true : false
+  end
+
   private
 
   # Finds the column's row with the lowest available space
