@@ -95,6 +95,24 @@ class Board
 
   # Checks if a player forms a diagonal line of 4 of their own token
   def diagonal_line?
+    return true if diagonal_line_from_right? || diagonal_line_from_left?
+
+    false
+  end
+
+  private
+
+  # Finds the column's row with the lowest available space
+  def lowest_available_space(column_number)
+    @columns[column_number].index(@@empty_space)
+  end
+
+  def less_than_four_tokens?(column_or_row)
+    column_or_row.filter { |space| space != @@empty_space }.length <= 3
+  end
+
+  # Checks if a player forms a diagonal line from right to left side of the board
+  def diagonal_line_from_right?
     0.upto(2) do |starting_row|
       1.upto(4) do |starting_column|
         next if @columns[starting_column][starting_row] == @@empty_space
@@ -116,14 +134,26 @@ class Board
     false
   end
 
-  private
+  # Checks if a player forms a diagonal line from left to right side of the board
+  def diagonal_line_from_left?
+    0.upto(2) do |starting_row|
+      7.downto(4) do |starting_column|
+        next if @columns[starting_column][starting_row] == @@empty_space
 
-  # Finds the column's row with the lowest available space
-  def lowest_available_space(column_number)
-    @columns[column_number].index(@@empty_space)
-  end
+        diagonal_line = []
+        column = starting_column 
+        row = starting_row 
 
-  def less_than_four_tokens?(column_or_row)
-    column_or_row.filter { |space| space != @@empty_space }.length <= 3
+        4.times do
+          diagonal_line << @columns[column][row]
+          column -= 1
+          row += 1
+        end
+
+        return true if diagonal_line.uniq.length == 1 
+      end
+    end
+
+    false
   end
 end

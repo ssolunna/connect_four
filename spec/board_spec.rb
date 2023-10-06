@@ -152,8 +152,8 @@ describe Board do
           4 => ['X', ' ', ' ', ' ', ' ', ' '],
           5 => [' ', ' ', ' ', ' ', ' ', ' '],
           6 => [' ', ' ', ' ', ' ', ' ', ' '],
-          7 => [' ', ' ', ' ', ' ', ' ', ' ']
-        ]}
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+        }
 
         it 'returns true' do
           board_horizontal.instance_variable_set(:@columns, line_begin)
@@ -170,8 +170,8 @@ describe Board do
           4 => ['X', ' ', ' ', ' ', ' ', ' '],
           5 => ['X', ' ', ' ', ' ', ' ', ' '],
           6 => [' ', ' ', ' ', ' ', ' ', ' '],
-          7 => [' ', ' ', ' ', ' ', ' ', ' ']
-        ]}
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+        }
 
         it 'returns true' do
           board_horizontal.instance_variable_set(:@columns, line_middle_one)
@@ -188,8 +188,8 @@ describe Board do
           4 => ['X', ' ', ' ', ' ', ' ', ' '],
           5 => ['X', ' ', ' ', ' ', ' ', ' '],
           6 => ['X', ' ', ' ', ' ', ' ', ' '],
-          7 => [' ', ' ', ' ', ' ', ' ', ' ']
-        ]}
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+        }
 
         it 'returns true' do
           board_horizontal.instance_variable_set(:@columns, line_middle_two)
@@ -206,8 +206,8 @@ describe Board do
           4 => ['X', ' ', ' ', ' ', ' ', ' '],
           5 => ['X', ' ', ' ', ' ', ' ', ' '],
           6 => ['X', ' ', ' ', ' ', ' ', ' '],
-          7 => ['X', ' ', ' ', ' ', ' ', ' ']
-        ]}
+          7 => ['X', ' ', ' ', ' ', ' ', ' ']]
+        }
 
         it 'returns true' do
           board_horizontal.instance_variable_set(:@columns, line_end)
@@ -225,8 +225,8 @@ describe Board do
         4 => [' ', ' ', ' ', ' ', ' ', ' '],
         5 => ['X', ' ', ' ', ' ', ' ', ' '],
         6 => ['X', ' ', ' ', ' ', ' ', ' '],
-        7 => ['X', ' ', ' ', ' ', ' ', ' ']
-      ]}
+        7 => ['X', ' ', ' ', ' ', ' ', ' ']]
+      }
 
       it 'returns false' do
         board_horizontal.instance_variable_set(:@columns, no_horizontal_line)
@@ -243,8 +243,8 @@ describe Board do
         4 => [' ', ' ', ' ', ' ', ' ', ' '],
         5 => ['X', ' ', ' ', ' ', ' ', ' '],
         6 => ['X', ' ', ' ', ' ', ' ', ' '],
-        7 => [' ', ' ', ' ', ' ', ' ', ' ']
-      ]}
+        7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+      }
 
       it 'returns false' do
         board_horizontal.instance_variable_set(:@columns, less_than_four_tokens)
@@ -259,7 +259,7 @@ describe Board do
     
     context 'when a player forms a diagonal line of 4 of their own token' do 
       context 'case 1: diagonal line from the bottom row' do
-        let(:diagonal_one) { Hash[ 
+        let(:diagonal_one_left) { Hash[
           1 => ['X', ' ', ' ', ' ', ' ', ' '],
           2 => [' ', 'X', ' ', ' ', ' ', ' '],
           3 => [' ', ' ', 'X', ' ', ' ', ' '],
@@ -269,15 +269,31 @@ describe Board do
           7 => [' ', ' ', ' ', ' ', ' ', ' ']]
         }
 
-        it 'returns true' do
-          board_diagonal.instance_variable_set(:@columns, diagonal_one)
+        it 'returns true (line from left to right side)' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_one_left)
+          result = board_diagonal.diagonal_line?
+          expect(result).to eq(true)
+        end
+
+        let(:diagonal_one_right) { Hash[
+          1 => [' ', ' ', ' ', ' ', ' ', ' '],
+          2 => [' ', ' ', ' ', ' ', ' ', ' '],
+          3 => [' ', ' ', ' ', ' ', ' ', ' '],
+          4 => [' ', ' ', ' ', 'X', ' ', ' '],
+          5 => [' ', ' ', 'X', ' ', ' ', ' '],
+          6 => [' ', 'X', ' ', ' ', ' ', ' '],
+          7 => ['X', ' ', ' ', ' ', ' ', ' ']]
+        }
+
+        it 'returns true (line from right to left side)' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_one_right)
           result = board_diagonal.diagonal_line?
           expect(result).to eq(true)
         end
       end
 
       context 'case 2: diagonal line in the middle of the board' do
-        let(:diagonal_two) { Hash[ 
+        let(:diagonal_two_left) { Hash[ 
           1 => [' ', ' ', ' ', ' ', ' ', ' '],
           2 => [' ', 'X', ' ', ' ', ' ', ' '],
           3 => [' ', ' ', 'X', ' ', ' ', ' '],
@@ -287,15 +303,31 @@ describe Board do
           7 => [' ', ' ', ' ', ' ', ' ', ' ']]
         }
 
-        it 'returns true' do
-          board_diagonal.instance_variable_set(:@columns, diagonal_two)
+        it 'returns true (line from left to right side)' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_two_left)
+          result = board_diagonal.diagonal_line?
+          expect(result).to eq(true)
+        end
+        
+        let(:diagonal_two_right) { Hash[ 
+          1 => [' ', ' ', ' ', ' ', ' ', ' '],
+          2 => [' ', ' ', ' ', ' ', ' ', ' '],
+          3 => [' ', ' ', ' ', ' ', 'X', ' '],
+          4 => [' ', ' ', ' ', 'X', ' ', ' '],
+          5 => [' ', ' ', 'X', ' ', ' ', ' '],
+          6 => [' ', 'X', ' ', ' ', ' ', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+        }
+
+        it 'returns true (line from right to left side)' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_two_right)
           result = board_diagonal.diagonal_line?
           expect(result).to eq(true)
         end
       end
       
       context 'case 3: diagonal line at the end of the board' do
-        let(:diagonal_three) { Hash[ 
+        let(:diagonal_three_left) { Hash[ 
           1 => [' ', ' ', ' ', ' ', ' ', ' '],
           2 => [' ', ' ', ' ', ' ', ' ', ' '],
           3 => [' ', ' ', ' ', ' ', ' ', ' '],
@@ -305,16 +337,33 @@ describe Board do
           7 => [' ', ' ', ' ', ' ', ' ', 'X']]
         }
 
-        it 'returns true' do
-          board_diagonal.instance_variable_set(:@columns, diagonal_three)
+        it 'returns true (line from left to right side)' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_three_left)
           result = board_diagonal.diagonal_line?
           expect(result).to eq(true)
         end
+        
+        let(:diagonal_three_right) { Hash[ 
+          1 => [' ', ' ', ' ', ' ', ' ', 'X'],
+          2 => [' ', ' ', ' ', ' ', 'X', ' '],
+          3 => [' ', ' ', ' ', 'X', ' ', ' '],
+          4 => [' ', ' ', 'X', ' ', ' ', ' '],
+          5 => [' ', ' ', ' ', ' ', ' ', ' '],
+          6 => [' ', ' ', ' ', ' ', ' ', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+        }
+
+        it 'returns true (line from right to left side)' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_three_right)
+          result = board_diagonal.diagonal_line?
+          expect(result).to eq(true)
+        end
+
       end
     end
 
     context "when the diagonal line is not made of the same token" do
-      let(:no_diagonal_line) { Hash[ 
+      let(:no_diagonal_line_left) { Hash[ 
         1 => [' ', ' ', ' ', ' ', ' ', ' '],
         2 => ['Z', ' ', ' ', ' ', ' ', ' '],
         3 => ['Z', 'X', ' ', ' ', ' ', ' '],
@@ -324,8 +373,24 @@ describe Board do
         7 => [' ', ' ', ' ', ' ', ' ', ' ']]
       }
 
-      it 'returns false' do
-        board_diagonal.instance_variable_set(:@columns, no_diagonal_line)
+      it 'returns false (line from left to right side)' do
+        board_diagonal.instance_variable_set(:@columns, no_diagonal_line_left)
+        result = board_diagonal.diagonal_line?
+        expect(result).to eq(false)
+      end
+      
+      let(:no_diagonal_line_right) { Hash[ 
+        1 => [' ', ' ', ' ', ' ', ' ', ' '],
+        2 => [' ', ' ', ' ', ' ', ' ', ' '],
+        3 => ['X', 'Z', 'Z', 'X', ' ', ' '],
+        4 => ['Z', 'Z', 'X', ' ', ' ', ' '],
+        5 => ['X', 'Z', 'Z', 'X', ' ', ' '],
+        6 => ['X', ' ', ' ', ' ', ' ', ' '],
+        7 => ['Z', ' ', ' ', ' ', ' ', ' ']]
+      }
+
+      it 'returns false (line from right to left side)' do
+        board_diagonal.instance_variable_set(:@columns, no_diagonal_line_right)
         result = board_diagonal.diagonal_line?
         expect(result).to eq(false)
       end
