@@ -93,18 +93,27 @@ class Board
     false
   end
 
+  # Checks if a player forms a diagonal line of 4 of their own token
   def diagonal_line?
-    diagonal_line = []
-    column = 1
-    row = 0
+    0.upto(2) do |starting_row|
+      1.upto(4) do |starting_column|
+        next if @columns[starting_column][starting_row] == @@empty_space
 
-    4.times do
-      diagonal_line << @columns[column][row]
-      column += 1
-      row += 1
+        diagonal_line = []
+        column = starting_column 
+        row = starting_row 
+
+        4.times do
+          diagonal_line << @columns[column][row]
+          column += 1
+          row += 1
+        end
+        
+        return true if diagonal_line.uniq.length == 1 
+      end
     end
 
-    diagonal_line.uniq.length == 1 ? true : false
+    false
   end
 
   private

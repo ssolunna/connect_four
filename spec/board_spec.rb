@@ -275,6 +275,60 @@ describe Board do
           expect(result).to eq(true)
         end
       end
+
+      context 'case 2: diagonal line in the middle of the board' do
+        let(:diagonal_two) { Hash[ 
+          1 => [' ', ' ', ' ', ' ', ' ', ' '],
+          2 => [' ', 'X', ' ', ' ', ' ', ' '],
+          3 => [' ', ' ', 'X', ' ', ' ', ' '],
+          4 => [' ', ' ', ' ', 'X', ' ', ' '],
+          5 => [' ', ' ', ' ', ' ', 'X', ' '],
+          6 => [' ', ' ', ' ', ' ', ' ', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+        }
+
+        it 'returns true' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_two)
+          result = board_diagonal.diagonal_line?
+          expect(result).to eq(true)
+        end
+      end
+      
+      context 'case 3: diagonal line at the end of the board' do
+        let(:diagonal_three) { Hash[ 
+          1 => [' ', ' ', ' ', ' ', ' ', ' '],
+          2 => [' ', ' ', ' ', ' ', ' ', ' '],
+          3 => [' ', ' ', ' ', ' ', ' ', ' '],
+          4 => [' ', ' ', 'X', ' ', ' ', ' '],
+          5 => [' ', ' ', ' ', 'X', ' ', ' '],
+          6 => [' ', ' ', ' ', ' ', 'X', ' '],
+          7 => [' ', ' ', ' ', ' ', ' ', 'X']]
+        }
+
+        it 'returns true' do
+          board_diagonal.instance_variable_set(:@columns, diagonal_three)
+          result = board_diagonal.diagonal_line?
+          expect(result).to eq(true)
+        end
+      end
+    end
+
+    context "when the diagonal line is not made of the same token" do
+      let(:no_diagonal_line) { Hash[ 
+        1 => [' ', ' ', ' ', ' ', ' ', ' '],
+        2 => ['Z', ' ', ' ', ' ', ' ', ' '],
+        3 => ['Z', 'X', ' ', ' ', ' ', ' '],
+        4 => ['Z', 'X', 'X', ' ', ' ', ' '],
+        5 => ['X', 'Z', 'Z', 'X', ' ', ' '],
+        6 => [' ', ' ', ' ', ' ', ' ', ' '],
+        7 => [' ', ' ', ' ', ' ', ' ', ' ']]
+      }
+
+      it 'returns false' do
+        board_diagonal.instance_variable_set(:@columns, no_diagonal_line)
+        result = board_diagonal.diagonal_line?
+        expect(result).to eq(false)
+      end
     end
   end
 end
