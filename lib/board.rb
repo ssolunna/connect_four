@@ -60,7 +60,7 @@ class Board
   # Checks if a player forms a vertical line of 4 of their own token
   def vertical_line?
     @columns.each_value do |column|
-      break if less_than_four_tokens?(column)
+      next if less_than_four_tokens?(column)
 
       if column[0..3].uniq.length == 1 # at the bottom
         return true
