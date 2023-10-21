@@ -2,7 +2,7 @@
 
 # Connect Four Players
 class Player
-  attr_reader :token
+  attr_reader :name, :token
 
   def initialize(name, token)
     @name = name

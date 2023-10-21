@@ -9,6 +9,18 @@ describe Game do
   let (:current_player) { subject.instance_variable_get(:@current_player) }
   let(:winner) { subject.instance_variable_get(:@winner) }
 
+  describe '#play' do
+    subject(:play_game) { described_class.new }
+
+    it 'displays the board and plays the game' do
+      allow(play_game).to receive(:set_players)
+      allow(play_game).to receive(:player_turns)
+      allow(play_game).to receive(:game_over)
+      expect(board).to receive(:display)
+      play_game.play
+    end
+  end
+
   describe '#set_players' do
     subject(:game_players) { described_class.new }
 

@@ -3,6 +3,7 @@
 require_relative '../lib/board'
 require_relative '../lib/player'
 
+# Game: Connect Four
 class Game
   def initialize
     @board = Board.new
@@ -10,6 +11,13 @@ class Game
     @player_two = nil
     @current_player = nil
     @winner = nil
+  end
+
+  def play
+    set_players
+    @board.display
+    player_turns
+    game_over
   end
 
   def set_players
@@ -48,6 +56,15 @@ class Game
 
   def switch_current_player
     @current_player = @current_player == @player_one ? @player_two : @player_one
+  end
+
+  def game_over
+    case @winner
+    when @player_one then puts "#{@player_one.name} is the winner!"
+    when @player_two then puts "#{@player_two.name} is the winner!"
+    else
+      puts "It's a draw!"
+    end
   end
 
   def player_input(range)
