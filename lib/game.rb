@@ -2,9 +2,12 @@
 
 require_relative '../lib/board'
 require_relative '../lib/player'
+require_relative '../lib/display'
 
 # Game: Connect Four
 class Game
+  include Display
+
   def initialize
     @board = Board.new
     @player_one = nil
@@ -14,6 +17,7 @@ class Game
   end
 
   def play
+    display_game_intro
     set_players
     @board.display
     player_turns
@@ -45,7 +49,7 @@ class Game
         @board.update_column(verified_column, player.token)
         break
       else
-        puts 'Column is full. Pick one with empty spaces'
+        display_err_column_full
       end
     end
   end
@@ -58,22 +62,14 @@ class Game
     @current_player = @current_player == @player_one ? @player_two : @player_one
   end
 
-  def game_over
-    case @winner
-    when @player_one then puts "#{@player_one.name} is the winner!"
-    when @player_two then puts "#{@player_two.name} is the winner!"
-    else
-      puts "It's a draw!"
-    end
-  end
-
   def player_input(range)
     loop do
+      display_prompt(@current_player, range)
       user_input = gets.chomp
       verified_number = verify_number(range, user_input.to_i)
       return verified_number if verified_number
 
-      puts "Invalid input"
+      display_err_invalid_input
     end
   end
 
@@ -93,15 +89,25 @@ class Game
   end
 
   def set_player_two
-    yellow_token = "\e[91m\u25CF\e[0m"
+    yellow_token = "\e[93m\u25CF\e[0m"
     @player_two = Player.new('Player 2', yellow_token)
   end
 
   def set_initial_player
+    display_select_prompt(@player_one, @player_two)
     @current_player = player_input((1..2)) == 1 ? @player_one : @player_two
   end
 
   def set_winner
     @winner = @current_player 
+  end
+
+  def game_over
+    print "\e[1mGame over: \e[0m"
+    if @winner
+      puts "\e[92m#{@winner.name} is the winner!\e[0m"
+    else
+      puts "\e[37mIt's a draw.\e[0m"
+    end
   end
 end

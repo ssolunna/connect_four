@@ -13,6 +13,7 @@ describe Game do
     subject(:play_game) { described_class.new }
 
     it 'displays the board and plays the game' do
+      allow(play_game).to receive(:display_game_intro)
       allow(play_game).to receive(:set_players)
       allow(play_game).to receive(:player_turns)
       allow(play_game).to receive(:game_over)
@@ -23,6 +24,10 @@ describe Game do
 
   describe '#set_players' do
     subject(:game_players) { described_class.new }
+
+    before do
+      allow(game_players).to receive(:display_select_prompt)
+    end
 
     it 'creates two instances of Player' do
       allow(game_players).to receive(:set_initial_player)
@@ -49,7 +54,11 @@ describe Game do
 
   describe '#player_input' do
     subject(:game_input) { described_class.new }
-    let(:error_message) { 'Invalid input' }
+
+    before do
+      allow(game_input).to receive(:puts)
+      allow(game_input).to receive(:print)
+    end
 
     context 'when user inputs a number inside the range' do
       let(:range) { (1..2) }
@@ -58,7 +67,7 @@ describe Game do
         valid_input = '1'
 
         allow(game_input).to receive(:gets).and_return(valid_input)
-        expect(game_input).not_to receive(:puts).with(error_message)
+        expect(game_input).not_to receive(:display_err_invalid_input)
         game_input.player_input(range)
       end
     end
@@ -71,7 +80,7 @@ describe Game do
         valid_input = '5'
 
         allow(game_input).to receive(:gets).and_return(invalid_input, valid_input)
-        expect(game_input).to receive(:puts).with(error_message).once
+        expect(game_input).to receive(:display_err_invalid_input).once
         game_input.player_input(range)
       end
     end
@@ -85,7 +94,7 @@ describe Game do
         valid_input = '3'
 
         allow(game_input).to receive(:gets).and_return(invalid_input, invalid_input, valid_input)
-        expect(game_input).to receive(:puts).with(error_message).twice
+        expect(game_input).to receive(:display_err_invalid_input).twice
         game_input.player_input(range)
       end
     end
@@ -159,7 +168,6 @@ describe Game do
   describe '#place_token' do
     subject(:game_token) { described_class.new }
     let(:current_player) { double(Player, token: 'X') }
-    let(:error_message) { 'Column is full. Pick one with empty spaces' }
     let(:column) { 7 }
 
     before do
@@ -172,7 +180,7 @@ describe Game do
       it 'updates the board and does not display error message' do
         allow(board).to receive(:column_full?).and_return(false)
         expect(board).to receive(:update_column)
-        expect(game_token).not_to receive(:puts).with(error_message)
+        expect(game_token).not_to receive(:display_err_column_full)
         game_token.place_token(current_player)
       end
     end
@@ -180,7 +188,7 @@ describe Game do
     context 'when player selects a full column, then one with empty spaces' do
       it 'displays error message once' do
         allow(board).to receive(:column_full?).and_return(true, false)
-        expect(game_token).to receive(:puts).with(error_message).once
+        expect(game_token).to receive(:display_err_column_full).once
         game_token.place_token(current_player)
       end
     end
