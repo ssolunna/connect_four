@@ -3,11 +3,14 @@
 require_relative '../lib/game'
 
 describe Game do
+  let(:board) { subject.instance_variable_get(:@board) }
+  let (:player_one) { subject.instance_variable_get(:@player_one) }
+  let (:player_two) { subject.instance_variable_get(:@player_two) }
+  let (:current_player) { subject.instance_variable_get(:@current_player) }
+  let(:winner) { subject.instance_variable_get(:@winner) }
+
   describe '#set_players' do
     subject(:game_players) { described_class.new }
-    let (:player_one) { game_players.instance_variable_get(:@player_one) }
-    let (:player_two) { game_players.instance_variable_get(:@player_two) }
-    let (:current_player) { game_players.instance_variable_get(:@current_player) }
 
     it 'creates two instances of Player' do
       allow(game_players).to receive(:set_initial_player)
@@ -92,6 +95,119 @@ describe Game do
         range = (1..2)
         number = 3 
         expect(game_verified.verify_number(range, number)).to be_nil 
+      end
+    end
+  end
+
+  describe '#player_turns' do
+    subject(:game_turns) { described_class.new }
+    let(:board) { double(Board) }
+
+    before do
+      game_turns.instance_variable_set(:@board, board)
+      allow(game_turns).to receive(:place_token)
+      allow(board).to receive(:display)
+    end
+
+    context 'when board is full' do
+      it 'stops loop' do
+        allow(board).to receive(:full?).and_return(true)
+        expect(game_turns).not_to receive(:place_token)
+        game_turns.player_turns
+      end
+    end
+
+    context 'when player_won? is true' do
+      before do
+        allow(board).to receive(:full?).and_return(false)
+        allow(game_turns).to receive(:player_won?).and_return(true)
+      end
+
+      it 'stops loop' do
+        expect(board).to receive(:full?).once
+        game_turns.player_turns
+      end
+
+      it 'sets winner to current_player' do
+        game_turns.player_turns
+        expect(winner).to be(current_player)
+      end
+    end
+
+    context 'when board is not full, and then full' do
+      it 'calls switch_current_player at least once' do
+        allow(board).to receive(:full?).and_return(false, true)
+        allow(game_turns).to receive(:player_won?).and_return(false)
+        expect(game_turns).to receive(:switch_current_player).once
+        game_turns.player_turns
+      end
+    end
+  end
+
+  describe '#place_token' do
+    subject(:game_token) { described_class.new }
+    let(:current_player) { double(Player, token: 'X') }
+    let(:error_message) { 'Column is full. Pick one with empty spaces' }
+    let(:column) { 7 }
+
+    before do
+      game_token.instance_variable_set(:@board, double(Board))
+      allow(board).to receive(:update_column)
+      allow(game_token).to receive(:player_input).and_return(column)
+    end
+
+    context 'when the selected column has empty spaces' do
+      it 'updates the board and does not display error message' do
+        allow(board).to receive(:column_full?).and_return(false)
+        expect(board).to receive(:update_column)
+        expect(game_token).not_to receive(:puts).with(error_message)
+        game_token.place_token(current_player)
+      end
+    end
+    
+    context 'when player selects a full column, then one with empty spaces' do
+      it 'displays error message once' do
+        allow(board).to receive(:column_full?).and_return(true, false)
+        expect(game_token).to receive(:puts).with(error_message).once
+        game_token.place_token(current_player)
+      end
+    end
+  end
+
+  describe '#player_won?' do
+    subject(:game_won) { described_class.new }
+
+    it 'sends vertical, horizontal and/or diagonal messages to Board' do
+      expect(board).to receive(:vertical_line?)
+      expect(board).to receive(:horizontal_line?)
+      expect(board).to receive(:diagonal_line?)
+      game_won.player_won?
+    end
+  end
+
+  describe '#switch_current_player' do
+    subject(:game_switch) { described_class.new }
+
+    before do
+      player_one = double(Player, name: 'Player 1')
+      player_two = double(Player, name: 'Player 2')
+      game_switch.instance_variable_set(:@player_one, player_one)
+      game_switch.instance_variable_set(:@player_two, player_two)
+    end
+    
+    context 'when @current_player is @player_one' do
+      it 'assigns @player_two to @current_player' do
+        game_switch.instance_variable_set(:@current_player, player_one)
+        game_switch.switch_current_player
+        expect(current_player).to be(player_two)
+      end
+    end
+
+    context 'when @current_player is @player_two' do
+      it 'assigns @player_one to @current_player' do
+        game_switch.instance_variable_set(:@current_player, player_two)
+        game_switch.switch_current_player
+        expect(current_player).to be(player_one)
       end
     end
   end

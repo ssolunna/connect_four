@@ -43,6 +43,10 @@ class Board
     HEREDOC
   end
 
+  def full?
+    (1..7).all? { |column_number| lowest_available_space(column_number) == nil }
+  end
+
   # Updates the lowest available space within a column with the player's token
   def update_column(column_number, player_token)
     row = lowest_available_space(column_number)

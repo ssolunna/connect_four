@@ -18,6 +18,46 @@ describe Board do
       expect(columns[column][row]).to eq(' ')
     end
   end
+  
+  describe '#full?' do
+    subject(:board_full) { described_class.new }
+
+    context 'when there is no available space in the board' do
+      let(:full_board) { Hash[ 
+        1 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        2 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        3 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        4 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        5 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        6 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        7 => ['f', 'f', 'f', 'f', 'f', 'f']]
+      }
+
+      it 'returns true' do
+        board_full.instance_variable_set(:@columns, full_board)
+        result = board_full.full?
+        expect(result).to eq(true)
+      end
+    end
+
+    context 'when the board has at least one available space' do
+      let(:non_full_board) { Hash[ 
+        1 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        2 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        3 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        4 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        5 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        6 => ['f', 'f', 'f', 'f', 'f', 'f'],
+        7 => ['f', 'f', 'f', 'f', 'f', ' ']]
+      }
+
+      it 'returns false' do
+        board_full.instance_variable_set(:@columns, non_full_board)
+        result = board_full.full?
+        expect(result).to eq(false)
+      end
+    end
+  end
 
   describe '#update_column' do
     subject(:board_update) { described_class.new }
@@ -358,7 +398,6 @@ describe Board do
           result = board_diagonal.diagonal_line?
           expect(result).to eq(true)
         end
-
       end
     end
 
